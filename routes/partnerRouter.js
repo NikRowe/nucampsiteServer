@@ -8,21 +8,21 @@ partnerRouter.use(bodyParser.json());
 
 partnerRouter.route('/')
     .get((req, res, next) => {
-        Promotion.find()
-            .then(promotions => {
+        Partner.find()
+            .then(partners => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json')
-                res.json(promotions)
+                res.json(partners)
             })
             .catch(err => next(err))
     })
     .post((req, res, next) => {
-        Promotion.create(req.body)
-            .then(promotion => {
-                console.log('Promotion Created ', promotion)
+        Partner.create(req.body)
+            .then(partner => {
+                console.log('Partner Created ', partner)
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json')
-                res.json(promotion)
+                res.json(partner)
             })
             .catch(err => next(err))
     })
@@ -31,7 +31,7 @@ partnerRouter.route('/')
         res.end('PUT operation not supported on /partners');
     })
     .delete((req, res, next) => {
-        Promotion.deleteMany()
+        Partner.deleteMany()
             .then(response => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json')
@@ -42,11 +42,11 @@ partnerRouter.route('/')
 
 partnerRouter.route('/:partnerId')
     .get((req, res, next) => {
-        Promotion.findById(req.params.promotionId)
-            .then(promotion => {
+        Partner.findById(req.params.partnerId)
+            .then(partner => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json')
-                res.json(promotion)
+                res.json(partner)
             })
             .catch(err => next(err))
     })
@@ -55,18 +55,18 @@ partnerRouter.route('/:partnerId')
         res.end(`POST operation not supported on /partners/${req.params.partnerId}`);
     })
     .put((req, res, next) => {
-        Promotion.findByIdAndUpdate(req.params.promotionId, {
+        Partner.findByIdAndUpdate(req.params.partnerId, {
             $set: req.body
         }, { new: true })
-            .then(promotion => {
+            .then(partner => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json')
-                res.json(promotion)
+                res.json(partner)
             })
             .catch(err => next(err))
     })
     .delete((req, res, next) => {
-        Campsite.findByIdAndDelete(req.params.promotionId)
+        Partner.findByIdAndDelete(req.params.partnerId)
             .then(response => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json')
