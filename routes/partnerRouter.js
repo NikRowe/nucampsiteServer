@@ -1,50 +1,78 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const Partner = require('../models/partner')
 
 const partnerRouter = express.Router();
 
 partnerRouter.use(bodyParser.json());
 
 partnerRouter.route('/')
-    .all((req, res, next) => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'text/plain');
-        next();
+    .get((req, res, next) => {
+        Promotion.find()
+            .then(promotions => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json')
+                res.json(promotions)
+            })
+            .catch(err => next(err))
     })
-    .get((req, res) => {
-        res.end('Will send all the partners to you');
-    })
-    .post((req, res) => {
-        res.end(`Will add the partner: ${req.body.name} with description: ${req.body.description}`);
+    .post((req, res, next) => {
+        Promotion.create(req.body)
+            .then(promotion => {
+                console.log('Promotion Created ', promotion)
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json')
+                res.json(promotion)
+            })
+            .catch(err => next(err))
     })
     .put((req, res) => {
         res.statusCode = 403;
         res.end('PUT operation not supported on /partners');
     })
-    .delete((req, res) => {
-        res.end('Deleting all partners');
+    .delete((req, res, next) => {
+        Promotion.deleteMany()
+            .then(response => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json')
+                res.json(response)
+            })
+            .catch(err => next(err))
     });
 
 partnerRouter.route('/:partnerId')
-    .all((req, res, next) => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'text/plain');
-        next();
-    })
-    .get((req, res) => {
-        res.end(`Will send details of the partner: ${req.params.partnerId} to you`);
+    .get((req, res, next) => {
+        Promotion.findById(req.params.promotionId)
+            .then(promotion => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json')
+                res.json(promotion)
+            })
+            .catch(err => next(err))
     })
     .post((req, res) => {
         res.statusCode = 403;
         res.end(`POST operation not supported on /partners/${req.params.partnerId}`);
     })
-    .put((req, res) => {
-        res.write(`Updating the partner: ${req.params.partnerId}\n`);
-        res.end(`Will update the partner: ${req.body.name}
-        with description: ${req.body.description}`);
+    .put((req, res, next) => {
+        Promotion.findByIdAndUpdate(req.params.promotionId, {
+            $set: req.body
+        }, { new: true })
+            .then(promotion => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json')
+                res.json(promotion)
+            })
+            .catch(err => next(err))
     })
-    .delete((req, res) => {
-        res.end(`Deleting partner: ${req.params.partnerId}`);
+    .delete((req, res, next) => {
+        Campsite.findByIdAndDelete(req.params.promotionId)
+            .then(response => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json')
+                res.json(response)
+            })
+            .catch(err => next(err))
     });
 
 
