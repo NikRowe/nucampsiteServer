@@ -1,15 +1,15 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+require('mongoose-currency').loadType(mongoose);
+const Currency = mongoose.Types.Currency;
+
+
 const partnerSchema = new Schema({
     name: {
         type: String,
         required: true,
         unique: true
-    },
-    description: {
-        type: String,
-        required: true
     },
     image: {
         type: String,
@@ -18,7 +18,11 @@ const partnerSchema = new Schema({
     featured: {
         type: Boolean,
         default: false
-    }
+    },
+    description: {
+        type: String,
+        required: true
+    },
 }, {
     timestamps: true
 });
